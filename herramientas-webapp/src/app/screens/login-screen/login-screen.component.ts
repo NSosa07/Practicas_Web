@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { FacadeService } from 'src/app/services/facade.service';
+declare var $:any;
 @Component({
   selector: 'app-login-screen',
   templateUrl: './login-screen.component.html',
@@ -15,26 +16,25 @@ export class LoginScreenComponent implements OnInit {
   public errors:any = {};
 
   constructor(
-    private router: Router
+    private router: Router,
+    public facadeService: FacadeService
   ) { }
 
   ngOnInit(): void {
   }
 
-  public login(){
-    /*if(this.username != "" && this.password != ""){
-      this.router.navigate(["login-nuevo"]);
-    }
-    else{
-      if(this.username == ""){
+  //Aquí van las funciones de validación
 
-        this.errors.username = "Campo requerido";
-      }
-      if(this.password == ""){
-        this.errors.password = "Campo requerido";
-      }
-    }*/
-    this.router.navigate(["login-new"]);
+  public login(){
+    //Validar
+    this.errors = [];
+
+    this.errors = this.facadeService.validarLogin(this.username, this.password);
+    if(!$.isEmptyObject(this.errors)){
+      return false;
+    }
+    //Si pasa la validación
+    this.router.navigate(["home"]);
   }
 
   public showPassword(){
